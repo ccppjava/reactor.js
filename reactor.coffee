@@ -66,7 +66,7 @@ global.Signal = (definition)->
           createdSignal[methodName] = ->
             output = definition[methodName].apply definition, arguments
             createdSignal(definition)
-            return output
+            output
         else
           delete createdSignal[methodName]
 
@@ -95,7 +95,7 @@ global.Signal = (definition)->
 
     # Add this signals own observers to the observer list
     # Note that observers is a list of observer triggers instead of the observers themselves
-    for observerTrigger in createdSignal.observers[...]
+    for observerTrigger in createdSignal.observers[..]
       observerList.push observerTrigger if (observerList.indexOf observerTrigger) < 0
 
     # Recursively evaluate any dependents
@@ -103,8 +103,10 @@ global.Signal = (definition)->
     # not the signals themselves
     # and give them the observer list to add to as well
     # need to duplicate list since it will be modified by child evaluations
-    for dependentEvaluate in createdSignal.dependents[...]
+    for dependentEvaluate in createdSignal.dependents[..]
       dependentEvaluate(observerList)
+
+    null
 
   # List of signals that this depends on
   # Used to remove self from their dependents list when necessary
@@ -125,7 +127,6 @@ global.Signal = (definition)->
       observerList = []
       evaluate(observerList)
       observerTrigger() for observerTrigger in observerList
-      return value
 
     # Read path
     # If no definition is given, we treat it as a read call and return the cached value
@@ -160,7 +161,7 @@ global.Signal = (definition)->
         existingObserveeIndex = dependent.observees.indexOf createdSignal
         dependent.observees.push createdSignal if existingObserveeIndex < 0
 
-      return value
+    return value
 
   createdSignal.dependents = []
   createdSignal.observers = []
@@ -201,7 +202,7 @@ global.Observer = (response)->
   createdObserver = (newResponse)->
     response = newResponse
     trigger()
-    return null
+    null
 
   trigger()
-  return createdObserver
+  createdObserver
