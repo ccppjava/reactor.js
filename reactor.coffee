@@ -1,4 +1,4 @@
-# Reactor is a javascript framework for functional reactive programming
+# Reactor is a JavaScript framework for functional reactive programming
 # It comprises of 2 primary components: Signals, and Observers
 # 
 # Signals represent values which can be observed
@@ -12,7 +12,7 @@
 # based on the observer/signal definition
 # 
 # When a signal is updated, it first updates all dependent signals
-# After all dependnt signals have been updated, the relevant observers are notified
+# After all dependent signals have been updated, the relevant observers are notified
 # From the perspective of observers, all signals are updated atomically and instantly 
 # 
 # TODOs
@@ -33,14 +33,14 @@ dependencyStack = []
 # Signals are functions representing observed values
 # They are read by executing the function with no arguments
 # They are set by executing the function with a signal definition as the only argument
-# If the definition is a function - it is executed to retrive the signal value
+# If the definition is a function - it is executed to retrieve the signal value
 # otherwise the definition is read as the value directly
 # If a signal definition reads other signals, it automatically gets set as a dependent
 # If any signal dependencies get updated, the signal is automatically updated as well
 # Note that signal definition should NOT have any external effects
 # They should only read values and not have any impact
 # For external impacts - use observers
-# to "destory" a signal - just pass set its value to null
+# to "destroy" a signal - just pass set its value to null
 global.Signal = (definition)->
 
   # stored value of this signal
@@ -98,7 +98,7 @@ global.Signal = (definition)->
     for observerTrigger in createdSignal.observers[...]
       observerList.push observerTrigger if (observerList.indexOf observerTrigger) < 0
 
-    # Recursively evaluate any de pendents
+    # Recursively evaluate any dependents
     # Note that the dependents is a list of the dependents evaluate functions
     # not the signals themselves
     # and give them the observer list to add to as well
@@ -129,7 +129,7 @@ global.Signal = (definition)->
 
     # Read path
     # If no definition is given, we treat it as a read call and return the cached value
-    # Simultaneously, check for calling signals/observers and register dependenceis accordingly
+    # Simultaneously, check for calling signals/observers and register dependencies accordingly
     else
       
       # check the global stack for the most recent dependent being evaluated
@@ -156,7 +156,7 @@ global.Signal = (definition)->
         createdSignal.observers.push dependent if existingObserverIndex < 0
 
         # symmetrically - register self as a observee
-        # this is needed for cleaning obeserver dependencies later
+        # this is needed for cleaning observer dependencies later
         existingObserveeIndex = dependent.observees.indexOf createdSignal
         dependent.observees.push createdSignal if existingObserveeIndex < 0
 
@@ -166,7 +166,7 @@ global.Signal = (definition)->
   createdSignal.observers = []
 
   # run an initial evaluation on creation
-  # no need to notify observers/dependents because it shouldnt have any yet
+  # no need to notify observers/dependents because it shouldn't have any yet
   evaluate()
   return createdSignal
 
